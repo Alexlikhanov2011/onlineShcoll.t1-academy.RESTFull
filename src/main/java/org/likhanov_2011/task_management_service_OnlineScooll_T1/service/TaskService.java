@@ -31,10 +31,10 @@ public class TaskService {
 @ExceptionHandling
     public Task update(Task task) {
     if (task == null) {
-        throw new TaskNotFoundException("Task cannot be null");
+        throw new InvalidTaskException("Task cannot be null");
     }
     if (task.getTitle() == null || task.getTitle().isBlank()) {
-        throw new TaskNotFoundException("Task title cannot be empty");
+        throw new InvalidTaskException("Task title cannot be empty");
     }
     return repository.save(task);
     }

@@ -80,7 +80,7 @@ class TaskServiceTest {
     public void testUpdateInvalidTask() {
         Task invalidTask = new Task();
 
-        assertThrows(TaskNotFoundException.class, () -> service.update(invalidTask));
+        assertThrows(InvalidTaskException.class, () -> service.update(invalidTask));
     }
 
     @Test
