@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: task-management-service-OnlineSchool-T1
+  datasource:
+    url: jdbc:postgresql://localhost:5432/onlineT1schol
+    username: t1schol
+    password: 12345678
+  jpa:
+    hibernate:
+      ddl: create

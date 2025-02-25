@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+
 @Component
 @Aspect
 public class LoggingAspect {
@@ -22,10 +23,17 @@ public class LoggingAspect {
     public Object trackingAdvice(ProceedingJoinPoint joinPoint) throws Throwable {
         logger.info("Logic before executing the method " + joinPoint.getSignature());
         long startTime = System.currentTimeMillis();
-        Object procced = joinPoint.proceed();
-        long executionTime = System.currentTimeMillis() - startTime;
-        logger.info("Method " + joinPoint.getSignature().getName() + " executed in " + executionTime + " ms");
-        return procced;
+
+        try {
+            Object proceed = joinPoint.proceed();
+            long executionTime = System.currentTimeMillis() - startTime;
+            logger.info("Method " + joinPoint.getSignature().getName() + " executed in " + executionTime + " ms");
+            return proceed;
+        } catch (Throwable throwable) {
+            long executionTime = System.currentTimeMillis() - startTime;
+            logger.error("Method " + joinPoint.getSignature().getName() + " threw an exception after " + executionTime + " ms: " + throwable.getMessage(), throwable);
+            throw throwable;
+        }
     }
 
     @AfterReturning(
@@ -39,7 +47,7 @@ public class LoggingAspect {
     @AfterThrowing(pointcut = "@annotation(org.likhanov_2011.task_management_service_OnlineScooll_T1.aspect.annotation.ExceptionHandling)",
             throwing = "tr")
     public void logAfterThrowing(JoinPoint joinPoint, Throwable tr) throws Throwable {
-        System.out.println("Exception caught in " + joinPoint.getSignature().getName());
-        System.out.println("Exception type is " + tr.getClass().getName());
+        logger.info("Exception caught in " + joinPoint.getSignature().getName());
+        logger.info("Exception type is " + tr.getClass().getName());
     }
 }

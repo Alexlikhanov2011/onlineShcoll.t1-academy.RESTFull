@@ -1,12 +1,11 @@
 package org.likhanov_2011.task_management_service_OnlineScooll_T1.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-
+import jakarta.persistence.*;
 import java.util.Objects;
+
+
 @Entity
+@Table(name = "tasks")
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -79,6 +78,4 @@ public Task(Long id, String title, String description, Long userId) {
                 ", userId=" + userId +
                 '}';
     }
-
-
 }
