@@ -5,6 +5,44 @@ spring:
     url: jdbc:postgresql://localhost:5432/onlineT1schol
     username: t1schol
     password: 12345678
+    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl: create
+      ddl-auto: update
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: task-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+  mail:
+    host: smtp.yandex.ru
+    port: 465
+    username:
+    password:
+    properties:
+      mail:
+              smtp:
+                connectiontimeout: 10000
+                timeout: 10000
+                writetimeout: 10000
+              auth: true
+              ssl:
+                enable: true
+
+demo:
+  kafka:
+    topic:
+      task_updates: task-updates
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    org.springframework.transaction: DEBUG
+    org.springframework.mail: DEBUG
+    org.springframework.web: DEBUG
+    com.sun.mail: DEBUG

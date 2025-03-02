@@ -34,7 +34,7 @@ class TaskServiceTest {
 
     @Test
     public void testAdd() {
-        Task task = new Task(1L, " ", " ", 1L);
+        Task task = new Task(1L, " ", " ", 1L, " ");
 
         when(repository.save(task)).thenReturn(task);
 
@@ -47,7 +47,7 @@ class TaskServiceTest {
     @Test
     public void testGetFound() {
         long taskId = 1;
-        Task task = new Task(1L, " ", " ", 1L);
+        Task task = new Task(1L, " ", " ", 1L, " ");
         when(repository.findById(taskId)).thenReturn(Optional.of(task));
 
         Task result = service.get(taskId);
@@ -67,7 +67,7 @@ class TaskServiceTest {
 
     @Test
     public void testUpdateSuccess() {
-        Task task = new Task(1L, "ф", "ф", 1L);
+        Task task = new Task(1L, "ф", "ф", 1L, " ");
         when(repository.save(task)).thenReturn(task);
 
         Task result = service.update(task);
@@ -86,7 +86,7 @@ class TaskServiceTest {
     @Test
     public void testDeleteSuccess() {
         long taskId = 1;
-        Task task = new Task(1L, " ", " ", 1L);
+        Task task = new Task(1L, " ", " ", 1L, " ");
         when(repository.findById(taskId)).thenReturn(Optional.of(task));
 
         Task result = service.delete(taskId);
@@ -107,8 +107,8 @@ class TaskServiceTest {
     @Test
     public void testGetAll() {
         List<Task> taskList = new ArrayList<>();
-        taskList.add(new Task(1L, " ", " ", 1L));
-        taskList.add(new Task(1L, " ", " ", 1L));
+        taskList.add(new Task(1L, " ", " ", 1L, " "));
+        taskList.add(new Task(1L, " ", " ", 1L, " "));
 
         when(repository.findAll()).thenReturn(taskList);
 

@@ -1,43 +1,57 @@
 package org.likhanov_2011.task_management_service_OnlineScooll_T1.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+
 import java.util.Objects;
 
-
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "tasks")
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @Column(name = "id")
+    private Long id;
+
+    @Column(name = "title")
     private String title;
+
+    @Column(name = "description")
     private String description;
-    private long userId;
-public Task(Long id, String title, String description, Long userId) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.userId = userId;
+
+    @Column(name = "userId")
+    private Long userId;
+
+    @Column(name = "status")
+    private String status;
+
+    public String getStatus() {
+        return status;
     }
 
-    public Task() {
-
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public Long getId() {
         return id;
     }
 
-    public String getTitle() {
-        return title;
+    public void setId(long id) {
+        this.id = id;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 
     public String getDescription() {
@@ -48,12 +62,12 @@ public Task(Long id, String title, String description, Long userId) {
         this.description = description;
     }
 
-    public Long getUserId() {
-        return userId;
+    public String getTitle() {
+        return title;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     @Override
@@ -61,12 +75,12 @@ public Task(Long id, String title, String description, Long userId) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
-        return Objects.equals(id, task.id) && Objects.equals(title, task.title) && Objects.equals(description, task.description) && Objects.equals(userId, task.userId);
+        return Objects.equals(id, task.id) && Objects.equals(title, task.title) && Objects.equals(description, task.description) && Objects.equals(userId, task.userId) && Objects.equals(status, task.status);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, description, userId);
+        return Objects.hash(id, title, description, userId, status);
     }
 
     @Override
@@ -76,6 +90,7 @@ public Task(Long id, String title, String description, Long userId) {
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", userId=" + userId +
+                ", status='" + status + '\'' +
                 '}';
     }
 }
