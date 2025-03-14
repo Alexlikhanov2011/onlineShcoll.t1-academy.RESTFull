@@ -8,6 +8,9 @@ import org.likhanov_2011.task_management_service_OnlineScooll_T1.model.Task;
 import org.likhanov_2011.task_management_service_OnlineScooll_T1.service.TaskService;
 import org.likhanov_2011.task_management_service_OnlineScooll_T1.util.TaskMapper;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Component;
 
@@ -18,15 +21,24 @@ import org.springframework.stereotype.Component;
 public class TaskConsumer {
 
     private final TaskService taskService;
+    private final TaskMapper taskMapper;
 
     @HandlingTracking
-    @KafkaListener(topics = "task-updates", groupId = "task-group", containerFactory = "taskDTOKafkaListenerContainerFactory")
-    public void handleTaskUpdate(TaskDTO taskDTO) {
+    @KafkaListener(
+            topics = "${spring.kafka.topics.task-updates}",
+            groupId = "${spring.kafka.consumer.group-id}",
+            containerFactory = "taskDTOKafkaListenerContainerFactory"
+    )
+    public void handleTaskUpdate(
+            TaskDTO taskDTO,
+            @Header(KafkaHeaders.RECEIVED_TOPIC) String topic,
+            Acknowledgment ack
+    ) {
         try {
-            Task task = TaskMapper.toEntity(taskDTO);
-            taskService.add(task);
-        } catch (ObjectOptimisticLockingFailureException e) {
-            log.error("Конфликт версий при сохранении задачи: {}", taskDTO.getId());
+            taskService.add(taskDTO);
+            ack.acknowledge();
+        } catch (Exception e) {
+            log.error("Ошибка обработки сообщения: {}", e.getMessage());
         }
     }
 }

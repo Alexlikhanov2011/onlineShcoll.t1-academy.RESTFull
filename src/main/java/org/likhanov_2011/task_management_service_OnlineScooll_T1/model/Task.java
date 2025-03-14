@@ -3,10 +3,11 @@ package org.likhanov_2011.task_management_service_OnlineScooll_T1.model;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Objects;
-
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

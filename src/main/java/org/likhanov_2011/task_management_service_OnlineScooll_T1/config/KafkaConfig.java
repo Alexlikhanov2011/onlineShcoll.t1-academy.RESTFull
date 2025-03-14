@@ -28,14 +28,23 @@ public class KafkaConfig {
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
 
+    @Value("${spring.kafka.topics.task-updates}")
+    private String taskUpdatesTopic;
+
+    @Value("${spring.kafka.topics.status-updates}")
+    private String statusUpdatesTopic;
+
+    @Value("${spring.kafka.consumer.group-id}")
+    private String groupId;
+
     @Bean
     public NewTopic taskUpdatesTopic() {
-        return new NewTopic("task-updates", 1, (short) 1);
+        return new NewTopic(taskUpdatesTopic, 1, (short) 1);
     }
 
     @Bean
     public NewTopic taskStatusUpdatesTopic() {
-        return new NewTopic("task-status-updates", 1, (short) 1);
+        return new NewTopic(statusUpdatesTopic, 1, (short) 1);
     }
 
     @Bean
@@ -70,7 +79,7 @@ public class KafkaConfig {
     public ConsumerFactory<String, TaskDTO> taskDTOConsumerFactory() {
         Map<String, Object> configProps = new HashMap<>();
         configProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
-        configProps.put(ConsumerConfig.GROUP_ID_CONFIG, "task-group");
+        configProps.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         configProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         configProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class);
         configProps.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, JsonDeserializer.class);
@@ -83,26 +92,6 @@ public class KafkaConfig {
     public ConcurrentKafkaListenerContainerFactory<String, TaskDTO> taskDTOKafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, TaskDTO> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(taskDTOConsumerFactory());
-        return factory;
-    }
-
-    @Bean
-    public ConsumerFactory<String, TaskStatusUpdateDTO> taskStatusUpdateConsumerFactory() {
-        Map<String, Object> configProps = new HashMap<>();
-        configProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
-        configProps.put(ConsumerConfig.GROUP_ID_CONFIG, "task-group");
-        configProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        configProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class);
-        configProps.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, JsonDeserializer.class);
-        configProps.put(JsonDeserializer.VALUE_DEFAULT_TYPE, TaskStatusUpdateDTO.class);
-        configProps.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
-        return new DefaultKafkaConsumerFactory<>(configProps);
-    }
-
-    @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, TaskStatusUpdateDTO> taskStatusUpdateKafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, TaskStatusUpdateDTO> factory = new ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConsumerFactory(taskStatusUpdateConsumerFactory());
         return factory;
     }
 }

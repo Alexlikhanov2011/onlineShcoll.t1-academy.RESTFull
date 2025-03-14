@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class TaskMapper {
 
-    public static TaskDTO toDTO(Task task) {
+    public TaskDTO toDTO(Task task) {
         return TaskDTO.builder()
                 .id(task.getId())
                 .title(task.getTitle())
@@ -18,7 +18,7 @@ public class TaskMapper {
     }
 
 
-    public static Task toEntity(TaskDTO taskDTO) {
+    public Task toEntity(TaskDTO taskDTO) {
         return Task.builder()
                 .id(taskDTO.getId())
                 .title(taskDTO.getTitle())
@@ -26,5 +26,20 @@ public class TaskMapper {
                 .userId(taskDTO.getUserId())
                 .status(taskDTO.getStatus())
                 .build();
+    }
+
+    public void updateTaskFromDTO(TaskDTO dto, Task entity) {
+        if (dto.getTitle() != null) {
+            entity.setTitle(dto.getTitle());
+        }
+        if (dto.getDescription() != null) {
+            entity.setDescription(dto.getDescription());
+        }
+        if (dto.getStatus() != null) {
+            entity.setStatus(dto.getStatus());
+        }
+        if (dto.getUserId() != null) {
+            entity.setUserId(dto.getUserId());
+        }
     }
 }
