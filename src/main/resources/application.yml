@@ -2,9 +2,57 @@ spring:
   application:
     name: task-management-service-OnlineSchool-T1
   datasource:
-    url: jdbc:postgresql://localhost:5432/onlineT1schol
-    username: t1schol
-    password: 12345678
+    url: jdbc:tc:postgresql:11.13:///test_db
+    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl: create
+      ddl-auto: update
+  kafka:
+    topics:
+      task-updates: task-updates-${spring.profiles.active:default}
+      status-updates: task-status-updates-${spring.profiles.active:default}
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: task-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+  mail:
+    host: smtp.yandex.ru
+    port: 465
+    username: ${EMAIL_USERNAME:}
+    password: ${EMAIL_PASSWORD:}
+    protocol: smtps
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          ssl:
+            enable: true
+        transport.protocol: smtps
+        debug: true
+
+app:
+  notifications:
+    enabled: true
+    from: no-reply@example.com
+    to: likhanov-2018@yandex.ru
+    subject: Обновление статуса задачи
+    test-content: "<p>Это тест из Spring Boot!</p>"
+    encoding: UTF-8
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    org.springframework.transaction: DEBUG
+    org.springframework.kafka: DEBUG
+    org.springframework.mail: DEBUG
+    com.sun.mail: DEBUG
